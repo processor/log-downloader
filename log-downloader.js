@@ -5,14 +5,9 @@ class LogDownloader {
   constructor(environmentId, keyId, keySecret) {
     this.environmentId = environmentId;
     this.keyId = keyId;
-    
-    if (typeof keySecret === 'string') {
-      // decode the secet if it sas provided as a base64 string
-      this.keySecret = Buffer.from(keySecret, 'base64');
-    }
-    else {
-      this.keySecret = keySecret;
-    }
+    this.keySecret = typeof keySecret === 'string' 
+      ? Buffer.from(keySecret, 'base64') // decode from base64 string
+      : this.keySecret = keySecret;
   }
 
   async download(path, options) {
@@ -93,8 +88,6 @@ class LogDownloader {
       }
 
       continuationToken = response.headers.get('continuation-token');
-      
-      // each batch returns 100,000 records
     }
     while (!!continuationToken);
   }
